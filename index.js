@@ -9,6 +9,20 @@ const port = 3000;
 app.use(express.json());
 app.use(fileUpload());
 
+app.get("/", async (req, res) => {
+  try {
+    const jsonData = {
+      message: "Welcome to the Movie Ticket Generator API",
+      version: "1.0",
+      date: new Date(),
+    };
+
+    res.json(jsonData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 app.post("/generate-ticket", async (req, res) => {
   try {
     const { experienceName, date, numberOfPersons, customerName } = req.body;
