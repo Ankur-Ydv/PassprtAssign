@@ -2,6 +2,7 @@ const express = require("express");
 const fileUpload = require("express-fileupload");
 const { createCanvas, loadImage } = require("canvas");
 const fs = require("fs");
+const path = require("path");
 
 const app = express();
 const port = 3000;
@@ -23,6 +24,7 @@ app.get("/", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 app.post("/generate-ticket", async (req, res) => {
   try {
     const { experienceName, date, numberOfPersons, customerName } = req.body;
@@ -46,7 +48,9 @@ app.post("/generate-ticket", async (req, res) => {
     ctx.fillText(`${customerName}`, 40, 410);
     ctx.fillText(`${bookingId}`, 120, 630);
 
-    const imagePath = `./tickets/ticket_${bookingId}.png`;
+    const directoryPath = path.join(__dirname, "tickets");
+    const imagePath = path.join(directoryPath, `ticket_${bookingId}.png`);
+
     const out = fs.createWriteStream(imagePath);
     const stream = canvas.createPNGStream();
     stream.pipe(out);
